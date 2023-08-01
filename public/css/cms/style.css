@@ -1,0 +1,176 @@
+.dtr-modal {
+    z-index: 1000;
+}
+
+.modal-backdrop {
+    z-index: 1040;
+}
+
+.sidebar,
+.sidebar-content {
+    background: #fff;
+    border-right: 1px solid rgba(145, 158, 171, 0.24);
+}
+
+.sidebar-item.active .sidebar-link:hover,
+.sidebar-item.active > .sidebar-link {
+    background: rgba(170, 62, 137, 0.08);
+    border-left: unset;
+    border-right: 3px solid rgb(170, 62, 137);
+    color: rgb(170, 62, 137);
+}
+
+.sidebar-item.active .sidebar-link:hover i,
+.sidebar-item.active .sidebar-link:hover svg,
+.sidebar-item.active > .sidebar-link i,
+.sidebar-item.active > .sidebar-link svg {
+    color: rgb(170, 62, 137);
+}
+
+.sidebar-link,
+a.sidebar-link {
+    background: #fff;
+    border-left: unset;
+    border-right: 3px solid transparent;
+    color: #495057;
+}
+
+.sidebar-link i,
+.sidebar-link svg,
+a.sidebar-link i,
+a.sidebar-link svg {
+    color: #495057;
+}
+
+a.sidebar-link:hover {
+    background: #4950571d;
+    color: #495057;
+}
+
+a.sidebar-link:hover svg {
+    color: #495057;
+}
+
+.sidebar-dropdown .sidebar-link {
+    color: #495057;
+}
+.sidebar-dropdown .sidebar-link:hover {
+    color: #495057 !important;
+}
+
+.card-header {
+    border-bottom: 1px solid #ddd !important;
+}
+
+.card-body,
+.card-footer,
+.card-header {
+    padding: 1.75rem 2rem;
+}
+
+.card-footer {
+    border-top: 1px solid #ddd !important;
+}
+
+.full-rounded {
+    border-radius: 10rem;
+}
+
+a.table-action {
+    margin: 0px 3px;
+}
+
+a.table-action-edit {
+    color: #3b7ddd;
+}
+
+a.table-action-detail {
+    color: #495057;
+}
+
+a.table-action-delete {
+    color: #dc3545;
+}
+
+.form-group label {
+    margin-bottom: 7px;
+}
+
+.dropdown-menu {
+    padding: 15px !important;
+}
+
+.datepicker table tr td.active,
+.datepicker table tr td.active.disabled,
+.datepicker table tr td.active.disabled:hover,
+.datepicker table tr td.active:hover {
+    background-color: #3b7ddd !important;
+    background-image: none !important;
+}
+
+.datepicker table tr td span.active,
+.datepicker table tr td span.active.disabled,
+.datepicker table tr td span.active.disabled:hover,
+.datepicker table tr td span.active:hover {
+    background-color: #3b7ddd !important;
+    background-image: none !important;
+}
+
+.datepicker td,
+.datepicker th {
+    width: 30px;
+    height: 28px;
+}
+
+.btn-light {
+    background-color: #eaedf3;
+    border-color: #eaedf3;
+}
+
+.btn-light:hover {
+    background-color: #dde2eb;
+    border-color: #dde2eb;
+}
+
+.badge {
+    padding: 7px 12px;
+    font-weight: normal;
+}
+
+label {
+    font-weight: bold;
+}
+
+.sidebar-dropdown .sidebar-link::before {
+    content: "-" !important;
+}
+
+.table > :not(:first-child) {
+    border-top: 0;
+}
+
+.table th {
+    background-color: rgb(170, 62, 137) !important;
+    color: #fff;
+}
+
+.badge-paid,
+.badge-PAID {
+    background-color: #3498db !important;
+}
+.badge-completed,
+.badge-SUCCEEDED {
+    background-color: #6ab04c !important;
+}
+
+.badge-complain {
+    background-color: #f0932b !important;
+}
+
+.badge-canceled {
+    background-color: #e74c3c !important;
+}
+
+.badge-arrived {
+    background-color: #6ab04c !important;
+}
