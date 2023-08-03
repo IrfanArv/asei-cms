@@ -49,6 +49,7 @@
     @include('components.modal.LoadingModal')
     @include('components.modal.CreateCategory')
     @include('components.modal.EditCategory')
+    @include('components.modal.EditPageSection')
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
             @include('components.menu')
@@ -109,16 +110,25 @@
             });
         });
 
+        // function readURL(input, id) {
+        //     id = id || '#modal-preview';
+        //     if (input.files) {
+        //         var reader = new FileReader();
+        //         reader.onload = function(e) {
+        //             $(id).attr('src', e.target.result);
+        //         };
+        //         reader.readAsDataURL(input.files[0]);
+        //         $('#modal-preview').removeClass('hidden');
+        //         $('#start').hide();
+        //     }
+        // }
         function readURL(input, id) {
-            id = id || '#modal-preview';
-            if (input.files) {
+            if (input.files && input.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function(e) {
                     $(id).attr('src', e.target.result);
                 };
                 reader.readAsDataURL(input.files[0]);
-                $('#modal-preview').removeClass('hidden');
-                $('#start').hide();
             }
         }
     </script>

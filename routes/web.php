@@ -122,6 +122,9 @@ Route::group([
     Route::get('/web-pages', [PagesController::class, 'index'])->name('web.pages');
     Route::get('/web-pages/{id}', [PagesController::class, 'getPagesById'])->name('web.pages.detail');
     Route::put('/web-pages/{id}', [PagesController::class, 'update'])->name('web.pages.update');
+    // ** UPDATE PAGES DATA SECTION
+    Route::post('/web-pages/update-section', [PagesController::class, 'updateSection'])->name('updateSection');
+
 
     // ** GET POST SOCIAL RESPONSIBILITY
     Route::get('/corporate-social-responsibility', [SocialResponses::class, 'index'])->name('social.responsibility');

@@ -256,13 +256,12 @@ class RequestApiController extends Controller
             ];
 
             $wpApiUrl = env('WORDPRESS_API_URL');
-            $response = Http::withHeaders(['Authorization' => 'Bearer' . $token])
+            $response = Http::withHeaders(['Authorization' => 'Bearer' . $token, 'Content-Type' => 'application/json'])
                 ->put("$wpApiUrl/wp/v2/web-settings/$id", $updatedData);
 
             if (!$response->successful()) {
-                // return redirect()->back()->with('error', 'Failed to update data.');
-                return redirect()->back()->with('success', 'Data updated successfully.');
-                // dd($response->json());
+                return redirect()->back()->with('error', 'Failed to update data.');
+                // return redirect()->back()->with('success', 'Data updated successfully.');
             }
         }
 

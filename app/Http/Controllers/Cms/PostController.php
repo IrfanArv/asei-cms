@@ -154,63 +154,6 @@ class PostController extends Controller
         return $response->json();
     }
 
-    // private function fetchPostData()
-    // {
-    //     $wpApiUrl = env('WORDPRESS_API_URL');
-    //     $token = session('jwt_token');
-    //     $authController = new AuthWPController();
-
-    //     if ($token === null) {
-    //         $authController->authenticate();
-    //         $token = session('jwt_token');
-    //     }
-
-    //     $response = Http::withHeaders([
-    //         'Authorization' => 'Bearer ' . $token,
-    //     ])->get($wpApiUrl . '/wp/v2/posts?lang=id&_embed');
-
-    //     if ($response->ok()) {
-    //         $postsData = $response->json();
-    //         $postLists = [];
-
-    //         foreach ($postsData as $postItems) {
-    //             $categoryNames = [];
-    //             if (isset($postItems['_embedded']['wp:term'])) {
-    //                 foreach ($postItems['_embedded']['wp:term'][0] as $category) {
-    //                     $categoryNames[] = $category['name'];
-    //                 }
-    //             }
-    //             $author = [];
-    //             if (isset($postItems['_embedded']['author'])) {
-    //                 foreach ($postItems['_embedded']['author'] as $authorName) {
-    //                     $author[] = $authorName['name'];
-    //                 }
-    //             }
-    //             $posts = [
-    //                 'id' => $postItems['id'],
-    //                 'date_gmt' => $postItems['date_gmt'],
-    //                 'modified_gmt' => $postItems['modified_gmt'],
-    //                 'status' => $postItems['status'],
-    //                 'link' => $postItems['link'],
-    //                 'title' => $postItems['title']['rendered'],
-    //                 'images' => $postItems['better_featured_image']['source_url'],
-    //                 'slug' => $postItems['slug'],
-    //                 'lang' => $postItems['lang'],
-    //                 'translations' => $postItems['translations'],
-    //                 'category_names' => $categoryNames,
-    //                 'author' => $author,
-    //             ];
-
-    //             $postLists[] = $posts;
-    //         }
-
-    //         return $postLists;
-    //     } else {
-    //         $authController->authenticate();
-    //         $token = session('jwt_token');
-    //     }
-    // }
-
     private function fetchPostData()
     {
         $wpApiUrl = env('WORDPRESS_API_URL');
@@ -222,7 +165,7 @@ class PostController extends Controller
             $token = session('jwt_token');
         }
 
-        $statuses = ['publish', 'future', 'draft']; // Add other statuses as needed
+        $statuses = ['publish', 'future', 'draft'];
         $posts = new Collection();
 
         foreach ($statuses as $status) {

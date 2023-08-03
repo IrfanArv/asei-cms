@@ -104,10 +104,14 @@
             <div class="col-md-12">
                 <div class="card card-action mb-4">
                     <div class="card-header">
-                        <div class="card-action-title">Home Slider
-                        </div>
+                        <div class="card-action-title">Home Slider</div>
                         <div class="card-action-element">
-                            <ul class="list-inline mb-0">
+                            <ul class="list-inline mt-1">
+                                {{-- <div class="col">
+                                    <button type="button" class="btn rounded-pill btn-label-primary waves-effect">
+                                        <span class="ti-xs ti ti-circle-plus me-1"></span>New Slide
+                                    </button>
+                                </div> --}}
                                 <li class="list-inline-item">
                                     <a href="javascript:void(0);" class="card-collapsible"><i
                                             class="tf-icons ti ti-chevron-right scaleX-n1-rtl ti-sm"></i></a>
@@ -134,6 +138,11 @@
                                             $image_slider = $sliders['better_featured_image']['source_url'] ? $sliders['better_featured_image']['source_url'] : asset('img/cms/avatars/no-thumbnail-medium.png');
                                             $title = $sliders['title'];
                                             $updated = \Carbon\Carbon::parse($sliders['modified_gmt'])->format('d M Y H:i');
+                                            if (isset($sliders['acf']['button_action']) && is_array($sliders['acf']['button_action'])) {
+                                                $url = isset($sliders['acf']['button_action']['url']) ? $sliders['acf']['button_action']['url'] : '';
+                                            } else {
+                                                $url = '';
+                                            }
                                         @endphp
                                         <tr>
 
@@ -143,19 +152,20 @@
                                             {{-- <td>{{ $sliders['acf']['description'] }}</td> --}}
                                             <td>{{ $updated }}</td>
                                             <td>
-                                                <div class="btn-group">
-                                                    <button type="button"
-                                                        class="btn btn-label-primary dropdown-toggle waves-effect"
-                                                        data-bs-toggle="dropdown" aria-expanded="false">Details</button>
-                                                    <ul class="dropdown-menu" style="">
-                                                        <li><a class="dropdown-item"
-                                                                href="#">{{ $sliders['id'] }}ID</a>
-                                                        </li>
-                                                        <li><a class="dropdown-item"
-                                                                href="#">{{ $sliders['translations']['en'] }}EN</a>
-                                                        </li>
-                                                    </ul>
+                                                <div class="d-inline-block">
+                                                    <button type="button" class="btn btn-sm btn-icon page-edit"
+                                                        data-post_type="home-sliders" data-id="{{ $sliders['id'] }}"
+                                                        data-name="{{ $sliders['title']['rendered'] }}"
+                                                        data-desc="{{ $sliders['acf']['description'] }}"
+                                                        data-url_button="{{ htmlspecialchars($url) }}"
+                                                        data-image="{{ $image_slider }}"><i
+                                                            class="text-warning ti ti-pencil"></i></button>
+                                                    <button type="button" class="btn btn-sm btn-icon page-delete"
+                                                        data-id="{{ $sliders['id'] }}"
+                                                        data-name="{{ $sliders['title']['rendered'] }}">
+                                                        <i class="text-danger ti ti-trash"></i></button>
                                                 </div>
+
                                             </td>
                                         </tr>
                                     @endforeach
@@ -190,7 +200,11 @@
                                 <img class="img-fluid d-flex mx-auto my-4 rounded"
                                     src="{{ $sectionOne['better_featured_image']['source_url'] }}" alt="Card image cap">
                                 <p class="card-text">{!! $sectionOne['content']['rendered'] !!}</p>
-                                <a href="javascript:void(0);" class="card-link">Edit</a>
+                                <a href="javascript:void(0);" class="card-link page-edit" data-post_type="page-content"
+                                    data-id="{{ $sectionOne['id'] }}"
+                                    data-name="{{ $sectionOne['acf']['section_name'] }}"
+                                    data-desc="{!! $sectionOne['content']['rendered'] !!}"
+                                    data-image="{{ $sectionOne['better_featured_image']['source_url'] }}">Edit</a>
                             </div>
                         </div>
                     </div>
@@ -215,11 +229,14 @@
                             @if ($sectionFourTitle)
                                 <div class="col-md-12">
                                     <div class="card-body">
-                                        <h5 class="card-title">{{ $sectionOne['acf']['section_name'] }}</h5>
+                                        <h5 class="card-title">{{ $sectionFourTitle['acf']['section_name'] }}</h5>
                                         <p class="card-text">
-                                            {!! $sectionOne['content']['rendered'] !!}
+                                            {!! $sectionFourTitle['content']['rendered'] !!}
                                         </p>
-                                        <a href="javascript:void(0)" class="card-link">Edit</a>
+                                        <a href="javascript:void(0)" class="card-link page-edit"
+                                            data-post_type="page-content" data-id="{{ $sectionFourTitle['id'] }}"
+                                            data-name="{{ $sectionFourTitle['acf']['section_name'] }}"
+                                            data-desc="{!! $sectionFourTitle['content']['rendered'] !!}" data-image="">Edit</a>
                                     </div>
                                     <hr>
                                 </div>
@@ -234,7 +251,11 @@
                                                 src="{{ $item['better_featured_image']['source_url'] }}"
                                                 alt="Card image cap">
                                             <p class="card-text">{!! $item['content']['rendered'] !!}</p>
-                                            <a href="javascript:void(0);" class="card-link">Edit</a>
+                                            <a href="javascript:void(0);" class="card-link page-edit"
+                                                data-id="{{ $item['id'] }}" data-post_type="page-content"
+                                                data-name="{{ $item['title']['rendered'] }}"
+                                                data-desc="{!! $item['content']['rendered'] !!}"
+                                                data-image="{{ $item['better_featured_image']['source_url'] }}">Edit</a>
                                         </div>
                                     </div>
                                 @endforeach
@@ -262,15 +283,15 @@
     <script src="{{ asset('assets/js/cards-actions.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('#slider_table').DataTable({
-                "order": [], // Disable initial sorting if needed
-                "paging": true, // Enable pagination
-                "lengthMenu": [10, 25, 50], // Number of items per page options
-                "pageLength": 10, // Default number of items per page
-                "searching": true, // Enable searching
-                "info": true, // Show information about current page and total records
+            var slider_table = $('#slider_table').DataTable({
+                "order": [],
+                "paging": true,
+                "lengthMenu": [10, 25, 50],
+                "pageLength": 10,
+                "searching": true,
+                "info": true,
                 "language": {
-                    "search": "Search records:",
+                    "search": "Search:",
                     "lengthMenu": "Show _MENU_ records per page",
                     "zeroRecords": "No matching records found",
                     "info": "Showing _START_ to _END_ of _TOTAL_ records",
@@ -284,6 +305,99 @@
                     }
                 }
             });
+            // GET DATA BY ID
+            $('body').on('click', '.page-edit', function() {
+                var sectionImage = $(this).data('image');
+
+                $('#modalEditSection').modal('show');
+
+                var sectionType = $(this).data('post_type');
+                var title = (sectionType === 'home-sliders') ? `Edit Slide` : `Edit Section`;
+                $('#titles-modal-edit-section').html(title);
+
+                $('#section_id').val($(this).data('id'));
+                $('#section_type').val(sectionType);
+                $('#section_name').val($(this).data('name'));
+                $('#section_desc').val($(this).data('desc'));
+                $('#section_url').val($(this).data('url_button'));
+
+                if (sectionImage) {
+
+                    $('#section_image_div').show();
+                    $('#modal-preview').attr('src', sectionImage);
+                } else {
+                    $('#section_image_div').hide();
+
+                }
+                if (sectionType === 'home-sliders') {
+                    $('#section_button_div').show();
+                } else {
+                    $('#section_button_div').hide();
+                }
+            });
+            // SUBMIT DATA EVENT UPDATE CATEGORY
+            $('body').on('submit', '#formUpdateSection', function(e) {
+                e.preventDefault();
+                var actionType = $('#btn-save').val();
+                $('#btn-save').html('Sending..');
+                var formData = new FormData(this);
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('updateSection') }}",
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function() {
+                        $('#modals-loading').show();
+                        $('.is-invalid').removeClass('is-invalid');
+                        $('.error').html('');
+                        $('#modalEditSection').modal('hide');
+                    },
+                    success: (data) => {
+                        $('#modals-loading').hide();
+                        $('#formUpdateSection').trigger("reset");
+                        $('#modalEditSection').modal('hide');
+                        $('#btn-save').html('Save Changes');
+
+                        if (data.success) {
+                            toastr.success(data.message, {
+                                positionClass: 'toast-top-center',
+                                toastClass: 'toastr-center',
+                            });
+                            location.reload();
+                        } else {
+                            console.log('====================================');
+                            console.log(data.dataError);
+                            console.log('====================================');
+                            toastr.error(data.message, {
+                                positionClass: 'toast-top-center',
+                                toastClass: 'toastr-center',
+                            });
+                        }
+                    },
+
+                    error: function(data) {
+                        console.log('Error:', data);
+                        $('#btn-save').html('Save Changes');
+                        $('#modals-loading').hide();
+                        if (data.responseJSON.success === false) {
+                            var errorMessage = data.responseJSON.message ||
+                                'Wopps! Errors';
+                            toastr.error(errorMessage, {
+                                positionClass: 'toast-top-center',
+                                toastClass: 'toastr-center',
+                            });
+                        } else {
+                            toastr.error('Wopps! Errors', {
+                                positionClass: 'toast-top-center',
+                                toastClass: 'toastr-center',
+                            });
+                        }
+                    }
+                });
+            });
+
         });
     </script>
 

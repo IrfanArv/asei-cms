@@ -40,6 +40,7 @@ class PagesController extends Controller
         ])->{$method}($url, $data);
     }
 
+
     private function uploadFeaturedMedia($postId, $file, $post_type)
     {
         $wpApiUrl = env('WORDPRESS_API_URL');
@@ -138,8 +139,6 @@ class PagesController extends Controller
         }
     }
 
-
-
     public function getPagesById($id)
     {
         $wpApiUrl = env('WORDPRESS_API_URL');
@@ -221,7 +220,7 @@ class PagesController extends Controller
                 }
 
                 $imageUrl = isset($pagesData['better_featured_image']['source_url']) ? $pagesData['better_featured_image']['source_url'] : null;
-
+                // return response()->json(['data' => $sliderData]);
                 return view('cms.pages.detail', compact('pagesData', 'imageUrl', 'sliderData', 'sectionOne', 'sectionFourData', 'sectionFourTitle'));
             } else {
                 return redirect()->back()->with('error', 'Terjadi kesalahan teknis');
@@ -231,5 +230,61 @@ class PagesController extends Controller
         } catch (RequestException $e) {
             return redirect()->back()->with('error', 'Permintaan ke server gagal: ' . $e->getMessage());
         }
+    }
+
+
+    public function updateSection(Request $request)
+    {
+        $sectionId = $request->input('section_id');
+        $sectionType = $request->input('section_type');
+        $sectionName = $request->input('section_name');
+        $sectionDesc = $request->input('section_desc');
+        $sectionImage = $request->file('section_image');
+        $sectionUrl = $request->input('section_url');
+
+        $wpApiUrl = env('WORDPRESS_API_URL');
+        $endpoint = "/wp/v2/";
+
+        if ($sectionType === 'home-sliders') {
+            $endpoint .= 'home-sliders/' . $sectionId;
+            $data = [
+                'title' => $sectionName,
+                'acf' => [
+                    'description' => $sectionDesc,
+                    'button_action' => [
+                        'title' => '',
+                        'url' => $sectionUrl,
+                        'target' => '',
+                    ],
+                ],
+            ];
+        } elseif ($sectionType === 'page-content') {
+            $endpoint .= 'page-content/' . $sectionId;
+            $data = [
+                'title' => $sectionName,
+                'content' => $sectionDesc,
+                'acf' => [
+                    'section_name' => $sectionName,
+                ],
+
+            ];
+        } else {
+            return response()->json(['success' => false, 'message' => 'Invalid section_type']);
+        }
+
+        $response = $this->sendAuthenticatedRequest('post', $wpApiUrl . $endpoint, $data);
+
+        if (!$response->successful()) {
+            return response()->json(['success' => false, 'message' => 'Failed to update the post', 'dataError' => $response->json()]);
+        }
+
+        if ($sectionImage) {
+            $uploadResponse = $this->uploadFeaturedMedia($sectionId, $sectionImage, $sectionType);
+            if (!$uploadResponse['success']) {
+                return response()->json(['success' => false, 'message' => 'Failed to upload the image']);
+            }
+        }
+
+        return response()->json(['success' => true, 'message' => 'Data updated successfully']);
     }
 }
