@@ -76,13 +76,29 @@
                 <div>Tanggung jawab sosial</div>
             </a>
         </li>
-
-        {{-- <li class="menu-item">
-            <a href="{{ ENV('APP_URL') . '/dashboard/networks' }}" class="menu-link">
+        <li class="menu-item {{ Request::segment(2) === 'link-awards' ? 'active open' : null }} ">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-certificate"></i>
                 <div>Penghargaan & Link</div>
             </a>
-        </li> --}}
+            <ul class="menu-sub">
+                <li class="menu-item {{ Request::segment(3) === 'piagam' ? 'active' : null }}">
+                    <a href="{{ ENV('APP_URL') . '/dashboard/link-awards/piagam' }}" class="menu-link">
+                        <div>Piagam</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::segment(3) === 'penghargaan' ? 'active' : null }}">
+                    <a href="{{ ENV('APP_URL') . '/dashboard/link-awards/penghargaan' }}" class="menu-link">
+                        <div>Penghargaan</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::segment(3) === 'links' ? 'active' : null }}">
+                    <a href="{{ ENV('APP_URL') . '/dashboard/link-awards/links' }}" class="menu-link">
+                        <div>Link</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
         <li class="menu-item {{ Request::segment(2) === 'networks' ? 'active' : null }}">
             <a href="{{ ENV('APP_URL') . '/dashboard/networks' }}" class="menu-link">
@@ -91,7 +107,7 @@
             </a>
         </li>
 
-        {{-- <li class="menu-item {{ Request::segment(2) === 'term-of-aggrement' ? 'active open' : null }}">
+        <li class="menu-item {{ Request::segment(2) === 'term-of-aggrement' ? 'active open' : null }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-certificate-2"></i>
                 <div>Term of Aggrement</div>
@@ -118,7 +134,7 @@
                     </a>
                 </li>
             </ul>
-        </li> --}}
+        </li>
         <li
             class="menu-item {{ Request::segment(2) === 'roles' ? 'active open' : null }} {{ Request::segment(2) === 'admin-users' ? 'active open' : null }} {{ Request::segment(2) === 'web-settings' ? 'active open' : null }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">

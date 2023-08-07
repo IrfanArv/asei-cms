@@ -11,9 +11,16 @@
     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
 
         <ul class="navbar-nav flex-row align-items-center ms-auto">
+
             <li class="nav-item me-2 me-xl-0">
                 <a class="nav-link style-switcher-toggle hide-arrow" href="javascript:void(0);">
                     <i class="ti ti-md"></i>
+                </a>
+            </li>
+            <li class="nav-item me-2 me-xl-0">
+                <a class="nav-link style-switcher-toggle hide-arrow" href="{{ env('WORDPRESS_URL') }}" target="_blank"
+                    data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Visit Website">
+                    <i class="ti ti-device-desktop"></i>
                 </a>
             </li>
 
@@ -72,7 +79,8 @@
                         <a class="dropdown-item" href="{{ route('logout') }}">
                             <i class="ti ti-logout me-2 ti-sm"></i>
                             <span class="align-middle">Log Out</span>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                style="display: none;">
                                 @csrf
                                 @method('POST')
                             </form>

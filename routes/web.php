@@ -13,6 +13,7 @@ use App\Http\Controllers\Cms\PagesController;
 use App\Http\Controllers\Cms\SocialResponses;
 use App\Http\Controllers\Cms\SettingController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\Cms\LinkAwardsController;
 use App\Http\Controllers\Api\RequestApiController;
 
 /*
@@ -60,6 +61,10 @@ Route::group([
     Route::get('/news-category', [PostController::class, 'newsCategory'])->name('news.category.index');
     Route::get('/news-category/data', [PostController::class, 'getCategories'])->name('news.category.data');
     // * END POSTS DATA
+
+    // *EDIT POSTS
+    Route::get('/article-news/update/{id}', [PostController::class, 'getPostById'])->name('edit.post');
+
 
     // * INSURANCE
     Route::get('/insurance', [ProductController::class, 'index'])->name('insurance.index');
@@ -116,7 +121,7 @@ Route::group([
 
     // ** GET WEB SETTINGS
     Route::get('/web-settings', [SettingController::class, 'index'])->name('web.settings');
-    Route::put('/web-settings/update', [RequestApiController::class, 'updateSettings'])->name('updateWebSettings');
+    Route::post('/web-settings/update', [RequestApiController::class, 'updateSettings'])->name('updateWebSettings');
 
     // ** GET PAGES
     Route::get('/web-pages', [PagesController::class, 'index'])->name('web.pages');
@@ -128,4 +133,15 @@ Route::group([
 
     // ** GET POST SOCIAL RESPONSIBILITY
     Route::get('/corporate-social-responsibility', [SocialResponses::class, 'index'])->name('social.responsibility');
+
+    // ** CREATE NEW SLIDERS
+    Route::post('/create-sliders', [PagesController::class, 'storeSlider'])->name('storeSlider');
+
+    // ** DELETE SLIDER
+    Route::delete('/delete-sliders/{types}/{id}/{id_translate}', [PagesController::class, 'deleteSlider'])->name('deleteSlider');
+
+    // ** LINK AND AWARD
+    Route::get('link-awards/piagam', [LinkAwardsController::class, 'getPiagam'])->name('piagam');
+    Route::get('link-awards/penghargaan', [LinkAwardsController::class, 'getAwards'])->name('awards');
+    Route::get('link-awards/links', [LinkAwardsController::class, 'getLink'])->name('links');
 });

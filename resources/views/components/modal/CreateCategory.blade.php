@@ -55,11 +55,22 @@
                         </div>
 
                     </div>
-                    {{-- <div class="col-12 p-0">
-                        <label class="form-label" for="image">Banner</label>
-                        <input type="file" class="form-control" id="image" name="image">
+                    {{-- <div class="col-12 p-0" id="section_image_div" style="display: none;">
+                        <label class="form-label" for="section_image">Image</label>
+                        <div class="row mb-2">
+                            <div class="col-auto">
+                                <img class="img-fluid img-thumbnail" id="modal-preview"
+                                    src="https://dummyimage.com/1100x345/005e9d/fff.png">
+                                <br><br>
+                                <div class="upload-btn-wrapper d-flex justify-content-center align-self-center">
+                                    <button class="btn-upload">Change Image</button>
+                                    <input id="section_image_input" type="file" name="section_image"
+                                        accept="image/*" onchange="readURL(this, '#modal-preview');">
+                                </div>
+                                <input type="hidden" name="hidden_image" id="hidden_image">
+                            </div>
+                        </div>
                     </div> --}}
-
 
                     <div class="col-12 text-center">
                         <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal"

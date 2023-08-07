@@ -1,6 +1,21 @@
 @extends('layouts.cms')
-@section('title', 'News & Event Categories')
+@section('title', 'Kategori Berita')
 @section('content')
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ ENV('APP_URL') . '/dashboard' }}">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ ENV('APP_URL') . '/dashboard/article-news/' }}">Berita</a>
+                    </li>
+                    <li class="breadcrumb-item active">Kategori Berita</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
 
     <div class="card">
         <div class="card-datatable table-responsive">
@@ -52,7 +67,7 @@
                         name: 'action'
                     },
                 ],
-                displayLength: 7,
+                searching: false,
                 dom: '<"card-header flex-column flex-md-row"<"head-label text-center"><"dt-action-buttons text-end pt-3 pt-md-0"B>><"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>r',
                 lengthMenu: [
                     [7, 10, 25, 50, 75, 100, -1],
@@ -61,17 +76,17 @@
                 buttons: [
 
                     {
-                        text: '<i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">New Category</span>',
+                        text: '<i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Add New</span>',
                         className: 'btn btn-primary create-category-post'
                     }
                 ],
 
             });
-            $('div.head-label').html('<h5 class="card-title mb-0">News & Event Categories</h5>');
+            $('div.head-label').html('<h5 class="card-title mb-0">Kategori Berita</h5>');
 
             // SHOW MODAL
             $('body').on('click', '.create-category-post', function() {
-                $('#titles-modal').html('Create Category News & Event');
+                $('#titles-modal').html('Buat Kategori Baru');
                 $('#modalCreateCategory').modal('show');
                 $('#category_type').val('categories');
             });
@@ -149,7 +164,7 @@
                         $('#modals-loading').hide();
                         $('#modalEditCategory').modal('show');
                         $('#titles-modal-edit').html(
-                            `Edit Category ${catName} (${data.data.lang})`);
+                            `Edit Category ${catName}`);
                         $('#cat_id_edit').val(catId);
                         $('#category_type_edit').val(catType);
                         $('#name').val(data.data.name);

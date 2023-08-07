@@ -11,17 +11,17 @@
                     <input type="hidden" name="section_id" id="section_id">
                     <input type="hidden" name="section_type" id="section_type">
 
-                    <div class="col-12 col-md-12">
+                    <div class="col-12 col-md-12" id="section_title_div">
                         <label for="name" class="form-label">Name</label>
                         <input type="text" class="form-control" id="section_name" name="section_name"
                             placeholder="Name">
                     </div>
-                    <div class="col-12">
+                    <div class="col-12" id="section_desc_div">
                         <label class="form-label" for="section_desc">Description</label>
                         <textarea class="form-control" id="section_desc" name="section_desc" rows="5"></textarea>
                     </div>
                     <div class="col-12 col-md-12" id="section_button_div" style="display: none;">
-                        <label for="url_button" class="form-label">Button Link</label>
+                        <label for="url_button" id="label_button" class="form-label"></label>
                         <input type="text" class="form-control" id="section_url" name="section_url"
                             placeholder="Link">
                     </div>

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Client\RequestException;
+
 
 class RequestApiController extends Controller
 {
@@ -29,15 +31,47 @@ class RequestApiController extends Controller
 
     private function sendAuthenticatedRequest($method, $url, $data = [])
     {
+        try {
+            $token = $this->getAuthToken();
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $token,
+                'Content-Type' => 'application/json',
+            ])->timeout(10)
+                ->{$method}($url, $data);
+
+            return $response;
+        } catch (RequestException $e) {
+            return redirect()->back()->with('error', 'Koneksi ke server gagal silahkan refresh browser');
+        }
+    }
+
+    private function uploadFeaturedMedia($postId, $file, $post_type)
+    {
+        $wpApiUrl = env('WORDPRESS_API_URL');
         $token = $this->getAuthToken();
 
-        $response = Http::withHeaders([
+        $uploadResponse = Http::withHeaders([
             'Authorization' => 'Bearer ' . $token,
-            'Content-Type' => 'application/json',
-        ])->{$method}($url, $data);
+        ])->attach(
+            'file',
+            file_get_contents($file->getRealPath()),
+            $file->getClientOriginalName()
+        )->post($wpApiUrl . '/wp/v2/media');
 
-        return $response;
+        if ($uploadResponse->successful()) {
+            $mediaId = $uploadResponse->json()['id'];
+            $thumbnailResponse = $this->sendAuthenticatedRequest('post', $wpApiUrl . '/wp/v2/' . $post_type . '/' . $postId, [
+                'featured_media' => $mediaId,
+            ]);
+
+            return ['success' => $thumbnailResponse->successful()];
+        }
+
+        return ['success' => false];
     }
+
+
 
     public function getCategoriesID($id, $types)
     {
@@ -207,27 +241,24 @@ class RequestApiController extends Controller
     {
         $wpApiUrl = env('WORDPRESS_API_URL');
 
-        $response = $this->sendAuthenticatedRequest('get', $wpApiUrl . '/wp/v2/web-settings?_embed');
+        $response = $this->sendAuthenticatedRequest('get', $wpApiUrl . '/wp/v2/pengaturan?_embed');
 
         if ($response->ok()) {
             $webSettings = $response->json();
             $settingList = [];
             foreach ($webSettings as $webSetting) {
-                $excludeNameField = isset($webSetting['web-setting-group']) && in_array(179, $webSetting['web-setting-group']);
-
                 $greeting = [
-                    'id' => isset($webSetting['id']) ? $webSetting['id'] : null,
+                    'id' => $webSetting['id'],
                     'title' => isset($webSetting['title']['rendered']) ? $webSetting['title']['rendered'] : null,
                     'images' => isset($webSetting['better_featured_image']['source_url']) ? $webSetting['better_featured_image']['source_url'] : null,
-                    'setting_value' => $excludeNameField ? null : (isset($webSetting['acf']['name']) ? $webSetting['acf']['name'] : null),
-                    'link_value' => isset($webSetting['acf']['external_link']['url']) ? $webSetting['acf']['external_link']['url'] : null,
+                    'name' => isset($webSetting['acf']['nama']) ? $webSetting['acf']['nama'] : null,
+                    'link_value' => isset($webSetting['acf']['link_button']['url']) ? $webSetting['acf']['link_button']['url'] : null,
                 ];
 
                 $settingList[] = $greeting;
             }
 
             return $settingList;
-            // return [$settingList[0]];
         } else {
             return redirect()->back()->with('error', $response->json());
         }
@@ -238,30 +269,41 @@ class RequestApiController extends Controller
     {
         $token = $this->getAuthToken();
         $settings = $request->input('settings');
+        $wpApiUrl = env('WORDPRESS_API_URL');
 
-        foreach ($settings as $setting) {
-            $id = $setting['id'];
-            $settingValue = $setting['setting_value'] ?? '';
+        foreach ($settings as $id => $setting) {
+            $name = $setting['name'] ?? '';
             $linkValue = $setting['link_value'] ?? '';
+            $file = $setting['image'] ?? null;
+
+            if ($file) {
+                $uploadResult = $this->uploadFeaturedMedia($id, $file, 'pengaturan');
+
+                if (!$uploadResult['success']) {
+                    return redirect()->back()->with('error', 'Failed to upload featured image');
+                }
+            }
 
             $updatedData = [
                 'acf' => [
-                    'name' => $settingValue,
-                    'external_link' => [
-                        'title' => '',
+                    'nama' => $name,
+                    'link_button' => [
+                        'title' => '#',
                         'url' => $linkValue,
                         'target' => '_blank'
                     ]
                 ]
             ];
 
-            $wpApiUrl = env('WORDPRESS_API_URL');
-            $response = Http::withHeaders(['Authorization' => 'Bearer' . $token, 'Content-Type' => 'application/json'])
-                ->put("$wpApiUrl/wp/v2/web-settings/$id", $updatedData);
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $token,
+                'Content-Type' => 'application/json',
+            ])->put($wpApiUrl . '/wp/v2/pengaturan/' . $id, $updatedData);
 
             if (!$response->successful()) {
                 return redirect()->back()->with('error', 'Failed to update data.');
-                // return redirect()->back()->with('success', 'Data updated successfully.');
+                // return response()->json(['data' => $response->json()]);
             }
         }
 
